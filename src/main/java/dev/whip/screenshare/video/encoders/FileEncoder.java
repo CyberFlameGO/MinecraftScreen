@@ -2,7 +2,6 @@ package dev.whip.screenshare.video.encoders;
 
 import dev.whip.screenshare.ScreenShare;
 import dev.whip.screenshare.video.FrameEncoder;
-import net.coobird.thumbnailator.Thumbnails;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
