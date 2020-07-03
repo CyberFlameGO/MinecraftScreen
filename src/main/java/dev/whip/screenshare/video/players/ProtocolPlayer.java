@@ -46,7 +46,7 @@ public class ProtocolPlayer extends ScreenPlayer {
 
     @Override
     public void initWatcher(Player player) {
-        for (int id = manager.getHEIGHT(); id >= 0; id--){
+        for (int id = manager.getHEIGHT() - 1; id >= 0; id--){
             UUID uuid = UUID.randomUUID();
             uuids.add(uuid);
 

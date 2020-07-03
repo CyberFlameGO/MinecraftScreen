@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 @CommandAlias("screen")
 public class PlayCommand extends BaseCommand {
     @Default
-    public void onPlay(Player player, int fps){
-        ScreenManager manager = new ScreenManager(128, 72, fps, player.getLocation(),
-                new ProtocolPlayer(ScreenShare.getInstance().getProtocolManager()), new FileEncoder());
+    public void onPlay(Player player, int fps, String filename){
+        ScreenManager manager = new ScreenManager(256, 144, fps, player.getLocation(),
+                new ProtocolPlayer(ScreenShare.getInstance().getProtocolManager()), new FileEncoder(filename));
 
         manager.addWatcher(player);
 
