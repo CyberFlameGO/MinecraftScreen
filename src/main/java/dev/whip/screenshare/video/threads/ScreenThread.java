@@ -1,4 +1,6 @@
-package dev.whip.screenshare.video;
+package dev.whip.screenshare.video.threads;
+
+import dev.whip.screenshare.video.ScreenManager;
 
 public class ScreenThread extends Thread{
     private boolean isRunning = true;
@@ -15,8 +17,14 @@ public class ScreenThread extends Thread{
             long targetTime = System.currentTimeMillis() + (1000 / manager.getFPS());
             manager.render();
 
-            while (System.currentTimeMillis() < targetTime){
-                manager.encode();
+            try {
+                long time = System.currentTimeMillis() - targetTime;
+                if (time <= 0){
+                    continue;
+                }
+                Thread.sleep(time);
+            } catch (Exception e){
+                e.printStackTrace();
             }
         }
 

@@ -1,5 +1,7 @@
 package dev.whip.screenshare.video;
 
+import dev.whip.screenshare.video.threads.EncodeThread;
+import dev.whip.screenshare.video.threads.ScreenThread;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -13,7 +15,8 @@ public class ScreenManager {
     private final ScreenPlayer player;
     private final FrameEncoder encoder;
 
-    private final ScreenThread thread;
+    private final ScreenThread screenThread;
+    private final EncodeThread encodeThread;
 
     public ScreenManager(int WIDTH, int HEIGHT, int FPS, Location screenStart, ScreenPlayer player, FrameEncoder encoder) {
         this.WIDTH = WIDTH;
@@ -23,21 +26,26 @@ public class ScreenManager {
         this.cache = new FrameCache();
 
         player.setManager(this);
+
         encoder.setManager(this);
         encoder.load();
 
         this.player = player;
         this.encoder = encoder;
 
-        this.thread = new ScreenThread(this);
+        this.screenThread = new ScreenThread(this);
+        this.encodeThread = new EncodeThread(this);
     }
 
     public void start(){
-        thread.start();
+        encodeThread.start();
+        screenThread.start();
     }
 
     public void stop(){
-        thread.setRunning(false);
+        screenThread.setRunning(false);
+        screenThread.stop();
+        encodeThread.stop();
         //TODO kill all the fake entities via a stop method
     }
 
@@ -45,12 +53,12 @@ public class ScreenManager {
         player.addWatcher(user);
     }
 
-    public void encode(){
-        encoder.encode();
-    }
-
     public void render(){
         player.render();
+    }
+
+    public void encode() {
+        encoder.encode();
     }
 
     public int getWIDTH() {

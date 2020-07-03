@@ -20,6 +20,7 @@ import java.util.UUID;
 public class ProtocolPlayer extends ScreenPlayer {
     private final static WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
     private final static WrappedDataWatcher.Serializer booleanSerializer = WrappedDataWatcher.Registry.get(Boolean.class);
+    private final static WrappedDataWatcher.Serializer chatSerializer = WrappedDataWatcher.Registry.getChatComponentSerializer(true);
 
     private final int ID_OFFSET = 10000000;
     private final List<UUID> uuids;
@@ -33,13 +34,9 @@ public class ProtocolPlayer extends ScreenPlayer {
 
     @Override
     public void render() {
-        List<String> frame = manager.getCache().getFrame();
-        if (frame == null){
-            //ScreenShare.getInstance().getLogger().warning("Frame was not encoded before render began");
-            return;
-        }
+        List<IChatBaseComponent> frame = manager.getCache().getFrame();
 
-        for (int x = manager.getHEIGHT() - 1; x >= 0 ; x--){
+        for (int x = 0; x < manager.getHEIGHT() ; x++){
             setRow(x, frame.get(x));
         }
     }
@@ -59,12 +56,14 @@ public class ProtocolPlayer extends ScreenPlayer {
         }
     }
 
-    public void setRow(int row, String json){
+
+
+    public void setRow(int row, IChatBaseComponent data){
         PacketContainer metaDataPacket = protocolManager.createPacket(PacketType.Play.Server.ENTITY_METADATA, true);
 
         WrappedDataWatcher watcher = new WrappedDataWatcher();
 
-        watcher.setObject(2, WrappedDataWatcher.Registry.getChatComponentSerializer(true), Optional.of(IChatBaseComponent.ChatSerializer.jsonToComponent(json))); //display name
+        watcher.setObject(2, chatSerializer, Optional.of(data)); //display name
 
         metaDataPacket.getIntegers()
                 .write(0, row + ID_OFFSET);
