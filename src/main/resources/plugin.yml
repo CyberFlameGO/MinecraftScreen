@@ -1,0 +1,6 @@
+name: MinecraftScreen
+version: 1.0
+main:  dev.whip.screenshare.ScreenShare
+description: A screen util
+depend: [ProtocolLib]
+api-version: 1.16
